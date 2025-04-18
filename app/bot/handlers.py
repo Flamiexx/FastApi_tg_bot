@@ -60,7 +60,6 @@ async def process_description(message: Message, state: FSMContext):
     await state.clear()
 
     try:
-        # Если есть expense_id — значит редактируем
         if "expense_id" in data:
             expense_id = data["expense_id"]
             response = requests.put(f"http://127.0.0.1:8000/expenses/{expense_id}", json={
@@ -99,12 +98,6 @@ async def handle_get_report(callback: CallbackQuery, state: FSMContext):
     await callback.answer()
 
 
-# @router.callback_query(F.data == "edit_expense")
-# async def handle_edit_expense(callback: CallbackQuery):
-#     await callback.message.answer("✏️ Виберіть витрату для редагування:")
-#     await callback.answer()
-
-
 @router.message(GetReport.start_date)
 async def process_start_date(message: Message, state: FSMContext):
     try:
@@ -125,7 +118,6 @@ async def process_end_date(message: Message, state: FSMContext):
         end_date_str = str(end_date)
         await state.clear()
 
-        # ⚡️ GET-запрос к FastAPI
         url = f"http://127.0.0.1:8000/expenses/?start_date={start_date}&end_date={end_date_str}"
         response = requests.get(url)
 

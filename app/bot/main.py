@@ -1,5 +1,4 @@
 from aiogram import Bot, Dispatcher
-from app.bot.handlers import router as main_router
 from aiogram.fsm.storage.memory import MemoryStorage
 import asyncio
 import logging
