@@ -6,7 +6,7 @@ import os
 from dotenv import load_dotenv
 from app.bot.handlers import router
 
-load_dotenv(dotenv_path="token.env")
+load_dotenv(dotenv_path=".env")
 TOKEN = os.getenv("BOT_TOKEN")
 
 logging.basicConfig(level=logging.INFO)
