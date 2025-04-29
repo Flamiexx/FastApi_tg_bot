@@ -1,19 +1,38 @@
 import requests
 from aiogram import F, Router, types
+from aiogram.filters import CommandStart
 from aiogram.types import Message, CallbackQuery, InlineKeyboardMarkup, InlineKeyboardButton
 from aiogram.fsm.context import FSMContext
 from .states import AddExpense, GetReport
-from .keyboards import main_menu
+from .keyboards import main_menu, start_keyboard
 from datetime import datetime
 from . import api_client
 
 router = Router()
 
 
-@router.message(F.text == "/start")
-async def start_cmd(message: Message, state: FSMContext):
-    await message.answer("Привіт! Обери дію з меню 👇", reply_markup=main_menu())
+@router.message(F.text == "🔁 Старт")
+async def handle_start_button(message: Message, state: FSMContext):
     await state.clear()
+
+    keyboard = InlineKeyboardMarkup(
+        inline_keyboard=[
+            [InlineKeyboardButton(text="📋 Відкрити меню", callback_data="show_main_menu")]
+        ]
+    )
+
+    await message.answer("👋 Привіт! Обери дію нижче 👇", reply_markup=keyboard)
+
+
+@router.callback_query(F.data == "show_main_menu")
+async def show_main_menu(callback: CallbackQuery):
+    await callback.message.answer("📋 Головне меню:", reply_markup=main_menu())
+    await callback.answer()
+
+
+@router.message(F.text == "🔁 Старт")
+async def handle_start_button(message: Message):
+    await message.answer("📋 Головне меню:", reply_markup=main_menu())
 
 
 @router.callback_query(F.data == "add_expense")
